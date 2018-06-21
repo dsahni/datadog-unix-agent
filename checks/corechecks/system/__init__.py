@@ -6,6 +6,7 @@
 from .cpu import Cpu
 from .load import Load
 from .memory import Memory
+from .lparstats import LPARStats
 from .filesystem import Filesystem
 from .uptime_check import UptimeCheck
 
@@ -14,6 +15,7 @@ __all__ = [
     'Cpu',
     'Load',
     'Memory',
+    'LPARStats',
     'Filesystem',
     'UptimeCheck',
 ]
