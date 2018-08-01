@@ -5,6 +5,7 @@
 # This product includes software developed at Datadog (https://www.datadoghq.com/).
 # Copyright 2018 Datadog, Inc.
 
+import os
 import signal
 import sys
 import time
@@ -29,7 +30,7 @@ from forwarder import Forwarder
 from api import APIServer
 
 # Globals
-PID_NAME = "datadog-unix-agent"
+PID_NAME = 'datadog-unix-agent'
 PID_DIR = None
 
 log = logging.getLogger('agent')
@@ -54,19 +55,23 @@ class AgentRunner(Thread):
             time.sleep(self._config.get('min_collection_interval'))
 
     def stop(self):
-        log.info("Stopping Agent Runner...")
+        log.info('Stopping Agent Runner...')
         self._event.set()
 
     def run(self):
-        log.info("Starting Agent Runner...")
+        log.info('Starting Agent Runner...')
         self.collection()
 
 
 def init_config():
     # init default search path
-    config.add_search_path("/etc/datadog-unix-agent")
-    config.add_search_path(".")
+    config.add_search_path('/etc/datadog-agent')
+    config.add_search_path('.')
     try:
+        config.load()
+        config.add_search_path(config.get('conf_path'))
+
+        #  load again
         config.load()
     except Exception:
         initialize_logging('agent')
@@ -77,7 +82,7 @@ def init_config():
 
     # add file provider
     file_provider = FileConfigProvider()
-    file_provider.add_place(config.get('confd_path'))
+    file_provider.add_place(os.path.join(config.get('conf_path'), 'conf.d'))
     file_provider.add_place(config.get('additional_checksd'))
     config.add_provider('file', file_provider)
 
