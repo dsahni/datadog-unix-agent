@@ -97,6 +97,7 @@ class Agent(Daemon):
         'stop',
         'restart',
         'status',
+        'flare',
     ]
 
     @classmethod
@@ -110,8 +111,9 @@ class Agent(Daemon):
     @classmethod
     def flare(cls, case_id):
         email = raw_input('Please enter your contact email address: ').lower()
+        case_id = int(case_id) if case_id else None
         myflare = Flare(case_id=case_id, email=email)
-        myflare.add_path(os.path.dirname(config.get('confd_path')))
+        myflare.add_path(os.path.dirname(config.get('conf_path')))
         myflare.add_path(os.path.dirname(config.get('logging').get('agent_log_file')))
         myflare.add_path(os.path.dirname(config.get('logging').get('dogstatsd_log_file')))
         myflare.add_path(config.get('additional_checksd'))
@@ -237,9 +239,8 @@ def main():
         agent.status()
 
     elif 'flare' == command:
-        case_id = raw_input('Do you have a suppor case id? Please enter it here (otherwise just hit enter): ').lower()
-        agent.flare(int(case_id))
-
+        case_id = raw_input('Do you have a support case id? Please enter it here (otherwise just hit enter): ').lower()
+        agent.flare(case_id)
 
 
 if __name__ == "__main__":
