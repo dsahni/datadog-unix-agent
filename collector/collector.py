@@ -17,7 +17,7 @@ log = logging.getLogger(__name__)
 
 
 class Collector(object):
-    CORE_CHECKS = ['cpu', 'filesystem', 'iostat', 'load', 'memory', 'uptime']
+    CORE_CHECKS = ['cpu', 'filesystem', 'iostat', 'load', 'lparstats', 'memory', 'uptime']
 
     def __init__(self, config, aggregator=None):
         self._config = config
@@ -52,6 +52,7 @@ class Collector(object):
             Load,
             Memory,
             IOStat,
+            LPARStats,
             Filesystem,
             UptimeCheck
         )
@@ -59,6 +60,7 @@ class Collector(object):
         self._check_classes['filesystem'] = Filesystem
         self._check_classes['iostat'] = IOStat
         self._check_classes['load'] = Load
+        self._check_classes['lparstats'] = LPARStats
         self._check_classes['memory'] = Memory
         self._check_classes['uptime'] = UptimeCheck
 
