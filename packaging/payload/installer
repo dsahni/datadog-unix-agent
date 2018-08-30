@@ -51,6 +51,20 @@ install() {
     pip install -r requirements.txt --no-index --find-links file://$(cd $1; pwd)/deps/env/ --find-links file://$(cd $1; pwd)/deps/env_bin/
     cd - 
 
+    echo "installing wheel integrations..."
+    INTEGRATIONS=$(ls $1/checks/bundled)
+    
+    cd $1/checks/bundled
+    pip install ./datadog_checks_base
+    for integration in $INTEGRATIONS; do
+        # skip the base one, already done.
+        if [ "$integration" = "datadog_checks_base" ]; then continue; fi
+    
+        # install integration.
+        pip install ./$integration
+    done
+    cd -
+
     echo "finalizing directory structure defaults..."
     mkdir -p $1/var/log/datadog
     mkdir -p $1/etc/datadog-agent/conf.d
