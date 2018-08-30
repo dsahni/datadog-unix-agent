@@ -48,8 +48,7 @@ install() {
     source ./venv/bin/activate
 
     echo "installing python dependencies..."
-    pip install ./deps/psutil/$PSUTIL_WHEEL
-    pip install -r requirements.txt --no-index --find-links file://$(cd $1; pwd)/deps/env/
+    pip install -r requirements.txt --no-index --find-links file://$(cd $1; pwd)/deps/env/ --find-links file://$(cd $1; pwd)/deps/env_bin/
     cd - 
 
     echo "finalizing directory structure defaults..."
@@ -60,22 +59,6 @@ install() {
 set -e
 
 echo "Installation for $AIX_VERSION.$AIX_RELEASE..."
-
-case "$AIX_VERSION" in
-    6|7) 
-        M=
-        python -c "import platform; print platform.architecture()[0]" | grep '64bit'
-        if [ $? -eq 0 ]; then
-            M='m'
-        fi
-        PSUTIL_WHEEL="psutil-5.4.6-cp27-cp27${M}-aix_${AIX_VERSION}_${AIX_RELEASE}.whl"
-        ;;
-    *) 
-        echo "unsupported AIX version: $AIX_VERSION.$AIX_RELEASE - bailing out"
-        exit 1
-        ;;
-esac
-
 
 echo "Running Installer..."
 if [ -e $1/datadog.yaml ]; then
