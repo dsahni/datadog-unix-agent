@@ -166,6 +166,10 @@ for integration in $INTEGRATIONS; do
 done
 cd -
 
+echo "Creating self-contained dir structure..."
+mkdir -p $2/datadog-unix-agent/var/log/datadog
+mkdir -p $2/datadog-unix-agent/etc/datadog-agent/conf.d
+mkdir -p $2/datadog-unix-agent/etc/datadog-agent/checks.d
 
 echo "Cleaning up..."
 rm /tmp/datadog-unix-agent.tar
