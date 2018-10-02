@@ -39,6 +39,17 @@ function cmp_release {
     fi
 }
 
+function install_filesets {
+    cd $1/deps/bffs
+    echo "\n"
+    echo "Installing required fileset..."
+    installp -aXYgd . -e $TMPDIR/install.log all
+    RET=$?
+
+    cd -
+    return $RET
+}
+
 function install_python {
     #Check if some packages are already installed from the yum_bundle.
     
@@ -289,6 +300,13 @@ if [ -d $1 ]; then
 fi
 
 unpack $1
+
+install_filesets $1
+if [ $? -ne -0 ];
+then
+    echo "There was a problem installing the required filesets..."
+    exit 1
+fi
 
 which python >/dev/null 2>&1
 if [ $? -ne 0 ];
